@@ -55,10 +55,9 @@ public class ProductService {
         catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Recurso não encontrado");
         }
-
     }
 
-    @Transactional(propagation = Propagation.SUPPORTS)
+    @Transactional(propagation = Propagation.SUPPORTS) // comum em métodos de leitura ou que lidam com condições onde a transação não é obrigatória
     public void delete(Long id) {
         if (!repository.existsById(id)) {
             throw new ResourceNotFoundException("Recurso não encontrado");
