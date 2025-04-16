@@ -22,6 +22,10 @@ public class ClientController {
         return ResponseEntity.ok(dto);
     }
 
-
+    @GetMapping
+    public ResponseEntity<Page<ClientDTO>> findAll(Pageable pageable) {
+        Page<ClientDTO> dto = service.findAll(pageable);
+        return ResponseEntity.ok(dto);
+    }
 
 }

@@ -21,10 +21,10 @@ public class ClientService {
         return new ClientDTO(client);
     }
 
-    /*@Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public Page<ClientDTO> findAll(Pageable pageable) {
         Page<Client> result = repository.findAll(pageable);
         return result.map(x -> new ClientDTO(x));
-    }*/
+    }
 
 }
