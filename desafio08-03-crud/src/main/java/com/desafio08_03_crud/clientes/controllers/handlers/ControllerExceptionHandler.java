@@ -1,10 +1,13 @@
 package com.desafio08_03_crud.clientes.controllers.handlers;
 
 import com.desafio08_03_crud.clientes.dto.CustomError;
+import com.desafio08_03_crud.clientes.services.exceptions.DatabaseException;
 import com.desafio08_03_crud.clientes.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -25,5 +28,22 @@ public class ControllerExceptionHandler {
 
         return ResponseEntity.status(status).body(error);
     }
+
+    @ExceptionHandler(DatabaseException.class)
+    public ResponseEntity<CustomError> database(DatabaseException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        CustomError error = new CustomError(
+                Instant.now(),
+                status.value(), // (400)
+                e.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(status).body(error);
+    }
+
+    /* @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<CustomError> */
+
 
 }

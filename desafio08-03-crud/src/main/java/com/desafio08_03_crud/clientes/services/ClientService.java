@@ -3,6 +3,7 @@ package com.desafio08_03_crud.clientes.services;
 import com.desafio08_03_crud.clientes.dto.ClientDTO;
 import com.desafio08_03_crud.clientes.entities.Client;
 import com.desafio08_03_crud.clientes.repositories.ClientRepository;
+import com.desafio08_03_crud.clientes.services.exceptions.DatabaseException;
 import com.desafio08_03_crud.clientes.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,10 +58,14 @@ public class ClientService {
 
         if(!repository.existsById(id)){
             throw new ResourceNotFoundException("Cliente não encontrado!");
-        } else {
-            repository.deleteById(id);
         }
 
+        try {
+            repository.deleteById(id);
+        }
+        catch (DatabaseException e) {
+            throw new DatabaseException("Falha de integridade referencial!");
+        }
 
 
     }
