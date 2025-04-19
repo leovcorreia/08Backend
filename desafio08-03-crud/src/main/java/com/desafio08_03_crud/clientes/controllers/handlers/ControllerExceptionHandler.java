@@ -1,12 +1,13 @@
 package com.desafio08_03_crud.clientes.controllers.handlers;
 
 import com.desafio08_03_crud.clientes.dto.CustomError;
+import com.desafio08_03_crud.clientes.dto.ValidationError;
 import com.desafio08_03_crud.clientes.services.exceptions.DatabaseException;
 import com.desafio08_03_crud.clientes.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -42,8 +43,21 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(status).body(error);
     }
 
-    /* @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<CustomError> */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<CustomError> methodArgumentNotValid(MethodArgumentNotValidException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        ValidationError errors = new ValidationError(
+                Instant.now(),
+                status.value(), // (422)
+                "Dados inválidos",
+                request.getRequestURI()
+        );
 
+        for (FieldError f : e.getBindingResult().getFieldErrors()) {
+            errors.addError(f.getField(), f.getDefaultMessage());
+        }
+
+        return ResponseEntity.status(status).body(errors);
+    }
 
 }
