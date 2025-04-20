@@ -2,6 +2,7 @@ package com.desafio08_03_crud.clientes.controllers.handlers;
 
 import com.desafio08_03_crud.clientes.dto.CustomError;
 import com.desafio08_03_crud.clientes.dto.ValidationError;
+import com.desafio08_03_crud.clientes.services.exceptions.ConflictException;
 import com.desafio08_03_crud.clientes.services.exceptions.DatabaseException;
 import com.desafio08_03_crud.clientes.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -58,6 +59,19 @@ public class ControllerExceptionHandler {
         }
 
         return ResponseEntity.status(status).body(errors);
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<CustomError> conflict(ConflictException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.CONFLICT;
+        CustomError error = new CustomError(
+                Instant.now(),
+                status.value(), // (409)
+                e.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(status).body(error);
     }
 
 }

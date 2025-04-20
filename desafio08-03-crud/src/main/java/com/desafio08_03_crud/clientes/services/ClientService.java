@@ -3,6 +3,7 @@ package com.desafio08_03_crud.clientes.services;
 import com.desafio08_03_crud.clientes.dto.ClientDTO;
 import com.desafio08_03_crud.clientes.entities.Client;
 import com.desafio08_03_crud.clientes.repositories.ClientRepository;
+import com.desafio08_03_crud.clientes.services.exceptions.ConflictException;
 import com.desafio08_03_crud.clientes.services.exceptions.DatabaseException;
 import com.desafio08_03_crud.clientes.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
@@ -37,10 +38,15 @@ public class ClientService {
 
     @Transactional
     public ClientDTO insert(ClientDTO dto) {
-        Client entity = new Client();
-        copyDtoToEntity(dto, entity);
-        entity = repository.save(entity);
-        return new ClientDTO(entity);
+        try {
+            Client entity = new Client();
+            copyDtoToEntity(dto, entity);
+            entity = repository.save(entity);
+            return new ClientDTO(entity);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new ConflictException("Cliente já existente!");
+        }
     }
 
     @Transactional
@@ -68,7 +74,6 @@ public class ClientService {
         catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Falha de integridade referencial!");
         }
-
 
     }
 
