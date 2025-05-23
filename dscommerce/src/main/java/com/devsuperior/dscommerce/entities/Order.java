@@ -56,6 +56,10 @@ public class Order {
         this.moment = moment;
     }
 
+    public Payment getPayment() {
+        return payment;
+    }
+
     public OrderStatus getStatus() {
         return status;
     }
