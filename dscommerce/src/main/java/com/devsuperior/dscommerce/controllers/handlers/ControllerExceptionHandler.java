@@ -3,6 +3,7 @@ package com.devsuperior.dscommerce.controllers.handlers;
 import com.devsuperior.dscommerce.dto.CustomError;
 import com.devsuperior.dscommerce.dto.ValidationError;
 import com.devsuperior.dscommerce.services.exceptions.DatabaseException;
+import com.devsuperior.dscommerce.services.exceptions.ForbiddenException;
 import com.devsuperior.dscommerce.services.exceptions.ResourceNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -58,4 +59,17 @@ public class ControllerExceptionHandler {
 
         return ResponseEntity.status(status).body(err);
     }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<CustomError> database(ForbiddenException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.FORBIDDEN; // 403 (autenticado, mas sem permissão)
+        CustomError err = new CustomError(
+                Instant.now(), // Quando o erro aconteceu
+                status.value(), // Código HTTP (403)
+                e.getMessage(), // Mensagem da exceção ("Falha de integridade referencial")
+                request.getRequestURI() // Caminho da requisição (ex: "/products/1")
+        );
+        return ResponseEntity.status(status).body(err);
+    }
+
 }
