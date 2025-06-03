@@ -55,7 +55,8 @@ public class OrderService {
 
         for (OrderItemDTO itemDto : dto.getItems()) {
             Product product = productRepository.getReferenceById(itemDto.getProductId());
-            OrderItem item = new OrderItem(order, product, itemDto.getQuantity(), itemDto.getPrice());
+            OrderItem item = new OrderItem(order, product, itemDto.getQuantity(), product.getPrice());
+            // Quantidade pega do DTO que foi passado, mas o Price copia do Product
             order.getItems().add(item);
         }
 

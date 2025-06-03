@@ -24,9 +24,9 @@ public class OrderItemDTO {
     public OrderItemDTO(OrderItem entity) {
         productId = entity.getProduct().getId();
         name = entity.getProduct().getName();
-        price = entity.getPrice();
-        quantity = entity.getQuantity();
-        entity.getProduct().getImgUrl();
+        price = entity.getPrice(); // Valor associado ao OrderItem apenas, p/ armazenar o histórico do preço no pedido
+        quantity = entity.getQuantity(); // Mesma coisa do de cima
+        imgUrl = entity.getProduct().getImgUrl();
     }
 
     public Long getProductId() {

@@ -61,7 +61,7 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(ForbiddenException.class)
-    public ResponseEntity<CustomError> database(ForbiddenException e, HttpServletRequest request) {
+    public ResponseEntity<CustomError> forbidden(ForbiddenException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.FORBIDDEN; // 403 (autenticado, mas sem permissão)
         CustomError err = new CustomError(
                 Instant.now(), // Quando o erro aconteceu
